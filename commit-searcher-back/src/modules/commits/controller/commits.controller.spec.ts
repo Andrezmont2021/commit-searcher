@@ -59,10 +59,10 @@ describe('CommitsController', () => {
         commits,
       );
 
-      const result = await controller.findAllByOwnerAndRepositoryName(
+      const result = await controller.findAllByOwnerAndRepositoryName({
         owner,
         repositoryName,
-      );
+      });
 
       // Verify that the controller calls the service method and returns the result
       expect(service.findAllByOwnerAndRepositoryName).toHaveBeenCalledWith(
@@ -86,7 +86,7 @@ describe('CommitsController', () => {
 
       // Verify that the controller throws an HttpException with the correct message and status
       await expect(
-        controller.findAllByOwnerAndRepositoryName(owner, repositoryName),
+        controller.findAllByOwnerAndRepositoryName({ owner, repositoryName }),
       ).rejects.toThrowError(new HttpException(errorMessage, errorStatus));
       // Verify that the controller calls the service method
       expect(service.findAllByOwnerAndRepositoryName).toHaveBeenCalledWith(

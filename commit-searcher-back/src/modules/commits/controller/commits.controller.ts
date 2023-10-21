@@ -6,9 +6,11 @@ import {
   HttpException,
   HttpCode,
   HttpStatus,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CommitsService } from '../service/commits.service';
+import { FindCommitParams } from '../dto/find-commit-params.dto';
 
 @Controller('commits')
 @ApiTags('commits')
@@ -19,13 +21,12 @@ export class CommitsController {
   @Version('1')
   @HttpCode(HttpStatus.OK)
   async findAllByOwnerAndRepositoryName(
-    @Query('owner') owner: string,
-    @Query('repositoryName') repositoryName: string,
+    @Query(ValidationPipe) params: FindCommitParams,
   ) {
     try {
       return await this.commitsService.findAllByOwnerAndRepositoryName(
-        owner,
-        repositoryName,
+        params.owner,
+        params.repositoryName,
       );
     } catch (error) {
       throw new HttpException(error.message, error.status);
