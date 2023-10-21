@@ -5,6 +5,11 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  //Enable CORS only for front-ends in localhost with port 4200 or 3000, and only get method
+  app.enableCors({
+    origin: ['http://localhost:4200', 'http://localhost:3000'],
+    methods: ['GET'],
+  });
 
   //API versioning
   app.enableVersioning({
