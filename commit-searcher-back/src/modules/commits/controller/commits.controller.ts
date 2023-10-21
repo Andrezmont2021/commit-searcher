@@ -8,7 +8,7 @@ import {
   HttpStatus,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommitsService } from '../service/commits.service';
 import { FindCommitParams } from '../dto/find-commit-params.dto';
 
@@ -20,6 +20,17 @@ export class CommitsController {
   @Get()
   @Version('1')
   @HttpCode(HttpStatus.OK)
+  @ApiQuery({
+    name: 'repositoryName',
+    type: String,
+    description: 'Name of the repository',
+  })
+  @ApiQuery({
+    name: 'owner',
+    type: String,
+    description: 'Owner of the repository',
+  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Returns the commits' })
   async findAllByOwnerAndRepositoryName(
     @Query(ValidationPipe) params: FindCommitParams,
   ) {
