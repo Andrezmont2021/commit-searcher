@@ -1,35 +1,93 @@
-import { TestBed } from '@automock/jest';
-import { CommitsService } from './commits.service';
+import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
+import { CommitsService } from './commits.service';
+import { of } from 'rxjs';
 
 describe('service', () => {
   let service: CommitsService;
-  let httpService: jest.Mocked<HttpService>;
+  let httpService: HttpService;
 
-  beforeAll(async () => {
-    const { unit, unitRef } = TestBed.create(CommitsService)
-      .mock(HttpService)
-      .using({ get: jest.fn() })
-      .compile();
+  const mockHTTPService = {
+    get: jest.fn(),
+  };
 
-    service = unit;
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        CommitsService,
+        {
+          provide: HttpService,
+          useValue: mockHTTPService,
+        },
+      ],
+    }).compile();
 
-    httpService = unitRef.get(HttpService);
+    service = module.get<CommitsService>(CommitsService);
+    httpService = module.get<HttpService>(HttpService);
   });
 
-  test('should be defined', () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  test('Should retrieve and map commits', async () => {
+  it('Should retrieve and map commits', async () => {
     const owner = 'githubUser';
     const repositoryName = 'myRepo';
+    const url = 'https://api.github.com/repos/githubUser/myRepo/commits';
+    const dataFromApi = [
+      {
+        commit: {
+          author: {
+            name: 'Test User 1',
+            email: 'testUser1@mail.com',
+            date: '2022-10-15T22:37:24Z',
+          },
+          message: 'Test commit message 1',
+          url: 'https://api.github.com/repos/TestOwner/TestRepository/git/commits/715b0ced70ff614666fbeeead93daf6a557faf41',
+          verification: {
+            verified: false,
+          },
+        },
+      },
+      {
+        commit: {
+          author: {
+            name: 'Test User 2',
+            email: 'testUser2@mail.com',
+            date: '2022-10-15T22:37:24Z',
+          },
+          message: 'Test commit message 2',
+          url: 'https://api.github.com/repos/TestOwner2/TestRepository2/git/commits/715b0ced70ff614666fbeeead93daf6a557faf41',
+          verification: {
+            verified: false,
+          },
+        },
+      },
+    ];
+    const resultData = [
+      {
+        message: 'Test commit message 1',
+        url: 'https://api.github.com/repos/TestOwner/TestRepository/git/commits/715b0ced70ff614666fbeeead93daf6a557faf41',
+        date: '2022-10-15T22:37:24Z',
+        isVerified: false,
+        authorName: 'Test User 1',
+        authorEmail: 'testUser1@mail.com',
+      },
+      {
+        message: 'Test commit message 2',
+        url: 'https://api.github.com/repos/TestOwner2/TestRepository2/git/commits/715b0ced70ff614666fbeeead93daf6a557faf41',
+        date: '2022-10-15T22:37:24Z',
+        isVerified: false,
+        authorName: 'Test User 2',
+        authorEmail: 'testUser2@mail.com',
+      },
+    ];
 
     const response = {
-      data: [{ commitData: 'commit1' }, { commitData: 'commit2' }],
+      data: dataFromApi,
     };
     //Mocking the response from github api
-    httpService.get.mockResolvedValueOnce(response);
+    mockHTTPService.get.mockReturnValue(of(response));
 
     const result = await service.findAllByOwnerAndRepositoryName(
       owner,
@@ -37,21 +95,28 @@ describe('service', () => {
     );
 
     // Verify the result
-    expect(result).toEqual([{ dtoData: 'commit1' }, { dtoData: 'commit2' }]);
+    expect(result).toEqual(resultData);
+    // Verify that api is called
+    expect(httpService.get).toHaveBeenCalledWith(url);
   });
 
-  // it('should handle errors', async () => {
-  //   const owner = 'githubUser';
-  //   const repositoryName = 'myRepo';
-
-  //   const error = new Error('Test Error');
-  //   mockHTTPService.get.mockRejectedValue(error);
-
-  //   try {
-  //     await service.findAllByOwnerAndRepositoryName(owner, repositoryName);
-  //   } catch (error) {
-  //     // Verify the error handling logic here
-  //     expect(error.message).toBe('Your expected error message');
-  //   }
-  // });
+  it('should handle errors', async () => {
+    const owner = 'githubUser';
+    const repositoryName = 'myRepo';
+    const url = 'https://api.github.com/repos/githubUser/myRepo/commits';
+    mockHTTPService.get.mockReturnValue(
+      of({
+        message: 'Test Error',
+        response: { status: 404 },
+      }),
+    );
+    try {
+      await service.findAllByOwnerAndRepositoryName(owner, repositoryName);
+    } catch (error) {
+      // Verify the result
+      expect(error.message).toContain('Error trying to retrieve the commits');
+      // Verify that api is called
+      expect(httpService.get).toHaveBeenCalledWith(url);
+    }
+  });
 });

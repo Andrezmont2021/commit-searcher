@@ -22,7 +22,7 @@ export class CommitsService {
       console.error('Error details: ', error.message);
       throw new CustomException(
         `${Constants.ERROR_AXIOS_HTTP} ${owner} - ${repositoryName}`,
-        error.response.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
+        error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
