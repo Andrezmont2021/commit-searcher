@@ -122,18 +122,16 @@ h2 {
 	padding: 0 2em;
 	margin-bottom: 1em;
 }
-.author{
-	background-color: #2f313a;
-}
+
 h3 {
 	display: inline;
 	transform: rotate(-2deg);
 	position: absolute;
 	margin: 0;
-	margin-top: -2.25em;
+	margin-top: -1.25em;
 	left: 9vmin;
 	padding: 0.5em 0.75em;
-	color: #fff;
+	color: #2f313a;
 	border-radius: 0.25em;
 	font-size: 1.35em;
 	transform-origin: left bottom;

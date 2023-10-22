@@ -9,12 +9,14 @@
       }"
     >
       <div class="thumb">
-        <img alt="Profile image about the author of the commit"
+        <img
+          alt="Profile image about the author of the commit"
           src="https://assets.codepen.io/39255/internal/avatars/users/default.png?height=120&width=120"
         />
       </div>
       <div class="description">
-        <div class="author"><h3>{{ commit.authorName }}</h3></div>
+        <h3>{{ commit.authorName }}</h3>
+        <br />
         <p>
           <strong>{{ commit.date | date : "yyyy-MM-dd HH:mm:ss" }}</strong
           ><br /><br />
