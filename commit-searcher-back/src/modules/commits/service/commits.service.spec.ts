@@ -44,7 +44,6 @@ describe('CommitsService', () => {
               date: '2022-10-15T22:37:24Z',
             },
             message: 'Test commit message 1',
-            url: 'https://api.github.com/repos/TestOwner/TestRepository/git/commits/715b0ced70ff614666fbeeead93daf6a557faf41',
             verification: {
               verified: false,
             },
@@ -58,7 +57,6 @@ describe('CommitsService', () => {
               date: '2022-10-15T22:37:24Z',
             },
             message: 'Test commit message 2',
-            url: 'https://api.github.com/repos/TestOwner2/TestRepository2/git/commits/715b0ced70ff614666fbeeead93daf6a557faf41',
             verification: {
               verified: false,
             },
@@ -68,7 +66,6 @@ describe('CommitsService', () => {
       const resultData = [
         {
           message: 'Test commit message 1',
-          url: 'https://api.github.com/repos/TestOwner/TestRepository/git/commits/715b0ced70ff614666fbeeead93daf6a557faf41',
           date: '2022-10-15T22:37:24Z',
           isVerified: false,
           authorName: 'Test User 1',
@@ -76,7 +73,6 @@ describe('CommitsService', () => {
         },
         {
           message: 'Test commit message 2',
-          url: 'https://api.github.com/repos/TestOwner2/TestRepository2/git/commits/715b0ced70ff614666fbeeead93daf6a557faf41',
           date: '2022-10-15T22:37:24Z',
           isVerified: false,
           authorName: 'Test User 2',
