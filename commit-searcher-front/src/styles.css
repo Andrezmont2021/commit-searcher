@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  /* Set the initial background color to black. */
+  background-color: black;
+
+  /* Create a linear gradient background that goes from black to another color. */
+  background-image: linear-gradient(
+    to bottom,
+    black,
+    #333
+  );
+
+
+  /* Optional: Set the background size to cover the entire viewport. */
+  background-size: cover;
+
+  /* Optional: Center the background. */
+  background-position: center;
+
+  /* Optional: Specify a fixed background attachment. */
+  background-attachment: fixed;
+}

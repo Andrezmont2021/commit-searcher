@@ -1,8 +1,26 @@
-<div *ngFor="let commit of commits">
-  {{ commit.message }}
-  {{ commit.url }}
-  {{ commit.date }}
-  {{ commit.isVerified }}
-  {{ commit.authorName }}
-  {{ commit.authorEmail }}
+<div class="content">
+  <h1 class="title">Welcome to the commit searcher</h1>
+  <ul class="commits">
+    <li
+      *ngFor="let commit of commits"
+      [ngClass]="{
+        'item commit-verified': commit.isVerified,
+        'item commit-not-verified': !commit.isVerified
+      }"
+    >
+      <div class="thumb">
+        <img
+          src="https://assets.codepen.io/39255/internal/avatars/users/default.png?height=120&width=120"
+        />
+      </div>
+      <div class="description">
+        <div class="author"><h3>{{ commit.authorName }}</h3></div>
+        <p>
+          <strong>{{ commit.date | date : "yyyy-MM-dd HH:mm:ss" }}</strong
+          ><br /><br />
+          {{ commit.message }}<br /><br /><a>{{ commit.authorEmail }}</a>
+        </p>
+      </div>
+    </li>
+  </ul>
 </div>
